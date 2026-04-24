@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Search Integrated Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=2">
+</head>
+<body>
+    <div class="background-overlay"></div>
+
+    <!-- Sidebar (☰ Controlled) -->
+    <div id="side-menu" class="side-menu">
+        <h2 class="menu-logo">메뉴 목차</h2>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <span class="nav-title">🌐 검색엔진</span>
+                <ul class="sub-nav">
+                    <li onclick="window.open('https://www.naver.com')">네이버</li>
+                    <li onclick="window.open('https://www.google.com')">구글</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">🎬 영상 플랫폼</span>
+                <ul class="sub-nav">
+                    <li onclick="window.open('https://www.youtube.com')">유튜브</li>
+                    <li onclick="window.open('https://www.tiktok.com')">틱톡</li>
+                    <li onclick="window.open('https://chzzk.naver.com')">치지직</li>
+                    <li onclick="window.open('https://www.sooplive.co.kr')">숲 (SOOP)</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">🖼️ 미디어/이미지</span>
+                <ul class="sub-nav">
+                    <li onclick="window.open('https://www.pinterest.co.kr')">핀터레스트</li>
+                    <li onclick="window.open('https://www.shutterstock.com')">전문 이미지 사이트</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">📰 뉴스</span>
+                <ul class="sub-nav">
+                    <li onclick="window.open('https://news.sbs.co.kr')">SBS 속보</li>
+                    <li onclick="fetchNews()">최신 뉴스 요약</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">💹 주식 시장</span>
+                <ul class="sub-nav">
+                    <li onclick="fetchStocks('국내 주식')">국내 주식 Top 5</li>
+                    <li onclick="fetchStocks('미국 주식')">미국 주식 Top 5</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">🗺️ 위치 및 날씨</span>
+                <ul class="sub-nav">
+                    <li onclick="window.open('https://map.naver.com')">네이버 지도</li>
+                    <li onclick="window.open('https://map.kakao.com')">카카오 맵</li>
+                    <li onclick="window.open('https://weather.naver.com')">네이버 날씨</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">🌐 번역기</span>
+                <ul class="sub-nav">
+                    <li onclick="window.open('https://papago.naver.com')">파파고 (Papago)</li>
+                    <li onclick="window.open('https://translate.google.co.kr')">구글 번역</li>
+                    <li onclick="window.open('https://www.deepl.com/translator')">DeepL 번역</li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <span class="nav-title">🛠️ 유틸리티</span>
+                <ul class="sub-nav">
+                    <li onclick="showSection('rename-section')">확장자 일괄 변경</li>
+                    <li onclick="showSection('convert-section')">Office 및 파일 변환</li>
+                    <li onclick="showSection('mp3-section')">MP3 분석 및 변환</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main App Wrapper -->
+    <div id="app-wrapper" class="app-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <button id="hamburger-btn" class="hamburger-btn">☰</button>
+            <div class="header-right">
+                <button id="back-btn" class="output-btn" style="background:#f59e0b; border-color:#d97706; color:#fff;">⬅ 뒤로 가기</button>
+                <button id="refresh-btn" class="output-btn" style="background:#3b82f6; border-color:#2563eb; color:#fff;">🔄 새로고침</button>
+                <button id="toggle-hud-btn" class="output-btn" style="background:#10b981; border-color:#059669;">작업 관리자</button>
+                <button id="list-output-btn" class="output-btn">목록 출력</button>
+                <button id="shutdown-btn" class="exit-btn">종료</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <div class="hero-section">
+                <h1 class="main-title">Smart Search</h1>
+                <!-- Smart Search Bar -->
+                <div class="search-container glass-panel">
+                    <input type="text" id="smart-search-input" placeholder="키워드를 입력하면 최적의 카테고리로 이동합니다.">
+                    <button id="search-go-btn" class="go-btn">검색</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div id="content-display" class="content-display">
+                <!-- Sections for features -->
+                <div id="programs-section" class="content-box glass-panel hidden">
+                    <h3>💻 기기 시스템 보고서</h3>
+                    <div class="report-container">
+                        <div class="report-block">
+                            <h4>설치된 프로그램</h4>
+                            <div id="program-list" class="scroll-list"></div>
+                        </div>
+                        <div class="report-block">
+                            <h4>전체 프로세스</h4>
+                            <div id="process-list" class="scroll-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="rename-section" class="content-box glass-panel hidden">
+                    <h3>📂 확장자 일괄 변경</h3>
+                    <div class="form-group">
+                        <input type="text" id="rename-path" class="glass-input" placeholder="폴더 경로">
+                        <div class="split-inputs">
+                            <input type="text" id="old-ext" class="glass-input" placeholder="기존 확장자 (예: jpg)">
+                            <input type="text" id="new-ext" class="glass-input" placeholder="바꿀 확장자 (예: png)">
+                        </div>
+                        <button id="rename-run-btn" class="action-btn">변경 실행</button>
+                    </div>
+                    <div id="rename-res" class="api-result"></div>
+                </div>
+
+                <div id="convert-section" class="content-box glass-panel hidden">
+                    <h3>🔄 Office 및 파일 변환</h3>
+                    
+                    <!-- File Conversion Block -->
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="color:var(--accent); margin-bottom:15px;">1. 파일 형식 변환 (Drag & Drop)</h4>
+                        <div id="drop-zone" class="drop-zone" style="margin-bottom:15px;">
+                            <p>여기에 변환할 파일을 클릭하여 선택하거나 끌어다 놓으세요.</p>
+                            <input type="file" id="convert-file-input" hidden>
+                        </div>
+                        <div id="format-options-container" style="display:none; flex-direction:column; gap:15px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom:15px;">
+                            <div style="text-align:center;">
+                                <span style="color:#94a3b8; font-size:0.9rem;">감지된 파일 형식</span>
+                                <div id="current-format-display" style="font-size:1.8rem; font-weight:bold; color:#fff;">?</div>
+                            </div>
+                            <div style="text-align:center; font-size:1.8rem; color:#38bdf8;">⬇</div>
+                            <div style="text-align:center;">
+                                <span style="color:#94a3b8; font-size:0.9rem; display:block; margin-bottom:10px;">변경할 오피스 확장자 선택</span>
+                                <select id="target-format" class="glass-select" style="margin-bottom:0; text-align:center; font-weight:bold; font-size:1.1rem; padding:15px;">
+                                    <option value=".xlsx">엑셀 (.xlsx)</option>
+                                    <option value=".csv">CSV (.csv)</option>
+                                    <option value=".pptx">파워포인트 (.pptx)</option>
+                                    <option value=".docx">워드 (.docx)</option>
+                                    <option value=".pdf">PDF (.pdf)</option>
+                                    <option value=".xls">구형 엑셀 (.xls)</option>
+                                    <option value=".ppt">구형 파워포인트 (.ppt)</option>
+                                    <option value=".doc">구형 워드 (.doc)</option>
+                                </select>
+                            </div>
+                            <button id="convert-run-btn" class="action-btn" style="width:100%; margin-top:10px;">변환 실행하기</button>
+                        </div>
+                        <div id="convert-res" class="api-result"></div>
+                    </div>
+
+                    <!-- Office Security Block -->
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px;">
+                        <h4 style="color:var(--accent); margin-bottom:15px;">2. Office 파일 보안(비밀번호) 설정</h4>
+                        <input type="file" id="office-file" class="glass-input">
+                        <input type="password" id="office-pw" class="glass-input" placeholder="새로운 파일 비밀번호 입력">
+                        <button id="office-run-btn" class="action-btn">보안 암호 적용</button>
+                        <div id="office-res" class="api-result"></div>
+                    </div>
+                </div>
+
+                <div id="mp3-section" class="content-box glass-panel hidden">
+                    <h3>🎵 MP3 분석 및 변환</h3>
+                    <input type="text" id="mp3-url" class="glass-input" placeholder="콘텐츠 URL 입력">
+                    <button id="mp3-run-btn" class="action-btn">분석 실행</button>
+                    <div id="mp3-res" class="api-result"></div>
+                </div>
+
+                <div id="news-section" class="content-box glass-panel hidden">
+                    <h3>📰 최신 뉴스 요약</h3>
+                    <div id="news-res"></div>
+                </div>
+
+                <div id="stocks-section" class="content-box glass-panel hidden">
+                    <h3 id="stock-title-h">💹 주식 정보</h3>
+                    <div id="stocks-res"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Left HUD (Real-time Task Manager) -->
+        <div id="hud-container" class="hud-container glass-panel" style="display:none;">
+            <header class="hud-header">
+                <span>실시간 작업 관리자</span>
+                <div class="pulse-icon"></div>
+            </header>
+            <div id="hud-process-list" class="hud-scroll">
+                로딩 중...
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js?v=2"></script>
+</body>
+</html>
